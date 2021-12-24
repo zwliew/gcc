@@ -475,7 +475,7 @@ forward_parm (tree parm)
     type = cp_build_reference_type (type, /*rval=*/true);
   warning_sentinel w (warn_useless_cast);
   exp = build_static_cast (input_location, type, exp,
-			   tf_warning_or_error);
+			   tf_warning_or_error, /*in_ctor=*/false);
   if (DECL_PACK_P (parm))
     exp = make_pack_expansion (exp);
   return exp;
@@ -1674,7 +1674,7 @@ build_comparison_op (tree fndecl, bool defining, tsubst_flags_t complain)
 		TREE_TYPE (comp) = rettype;
 	      else
 		comp = build_static_cast (input_location, rettype, comp,
-					  complain);
+					  complain, /*in_ctor=*/false);
 	      info.check (comp);
 	      if (defining)
 		{
@@ -1712,7 +1712,7 @@ build_comparison_op (tree fndecl, bool defining, tsubst_flags_t complain)
 	      tree seql = lookup_comparison_result (cc_strong_ordering,
 						    "equal", complain);
 	      val = build_static_cast (input_location, rettype, seql,
-				       complain);
+				       complain, /*in_ctor=*/false);
 	    }
 	  finish_return_stmt (val);
 	}

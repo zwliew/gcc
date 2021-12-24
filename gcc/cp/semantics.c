@@ -6297,10 +6297,10 @@ finish_omp_reduction_clause (tree c, bool *need_default_ctor, bool *need_dtor)
 		  tree rtype = build_reference_type (atype);
 		  omp_out = build_static_cast (input_location,
 					       rtype, omp_out,
-					       tf_warning_or_error);
+					       tf_warning_or_error, false);
 		  omp_in = build_static_cast (input_location,
 					      rtype, omp_in,
-					      tf_warning_or_error);
+					      tf_warning_or_error, false);
 		  if (omp_out == error_mark_node || omp_in == error_mark_node)
 		    return true;
 		  omp_out = convert_from_reference (omp_out);
@@ -6336,10 +6336,10 @@ finish_omp_reduction_clause (tree c, bool *need_default_ctor, bool *need_dtor)
 		  tree rtype = build_reference_type (atype);
 		  omp_priv = build_static_cast (input_location,
 						rtype, omp_priv,
-						tf_warning_or_error);
+						tf_warning_or_error, false);
 		  omp_orig = build_static_cast (input_location,
 						rtype, omp_orig,
-						tf_warning_or_error);
+						tf_warning_or_error, false);
 		  if (omp_priv == error_mark_node
 		      || omp_orig == error_mark_node)
 		    return true;

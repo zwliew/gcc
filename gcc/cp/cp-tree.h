@@ -7407,7 +7407,7 @@ extern tree get_tinfo_decl			(tree);
 extern tree get_typeid				(tree, tsubst_flags_t);
 extern tree build_headof			(tree);
 extern tree build_dynamic_cast			(location_t, tree, tree,
-						 tsubst_flags_t);
+						 tsubst_flags_t, bool = false);
 extern void emit_support_tinfos			(void);
 extern bool emit_tinfo_decl			(tree);
 extern unsigned get_pseudo_tinfo_index		(tree);
@@ -7965,16 +7965,16 @@ extern tree build_x_compound_expr		(location_t, tree, tree,
 extern tree build_compound_expr                 (location_t, tree, tree);
 extern tree cp_build_compound_expr		(tree, tree, tsubst_flags_t);
 extern tree build_static_cast			(location_t, tree, tree,
-						 tsubst_flags_t);
+						 tsubst_flags_t, bool);
 extern tree build_reinterpret_cast		(location_t, tree, tree,
-						 tsubst_flags_t);
+						 tsubst_flags_t, bool = false);
 extern tree build_const_cast			(location_t, tree, tree,
-						 tsubst_flags_t);
+						 tsubst_flags_t, bool = false);
 extern tree build_c_cast			(location_t, tree, tree);
 extern cp_expr build_c_cast			(location_t loc, tree type,
 						 cp_expr expr);
 extern tree cp_build_c_cast			(location_t, tree, tree,
-						 tsubst_flags_t);
+						 tsubst_flags_t, bool = false);
 extern cp_expr build_x_modify_expr		(location_t, tree,
 						 enum tree_code, tree,
 						 tree, tsubst_flags_t);

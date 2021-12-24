@@ -7841,7 +7841,7 @@ convert_ptrmem (tree type, tree expr, bool allow_inverse_p,
 
 static tree
 build_static_cast_1 (location_t loc, tree type, tree expr, bool c_cast_p,
-		     bool *valid_p, tsubst_flags_t complain)
+		     bool *valid_p, tsubst_flags_t complain, bool in_ctor)
 {
   tree intype;
   tree result;
@@ -8075,6 +8075,10 @@ build_static_cast_1 (location_t loc, tree type, tree expr, bool c_cast_p,
 					  (TREE_TYPE (type))),
 		      complain))
     {
+      if (in_ctor) {
+        warning_at(loc, OPT_Wuseless_cast, "Invalid %<static_cast%> from type %qT to unconstructed/destroyed derived type %qT", intype, type);
+      }
+
       tree base;
 
       if (processing_template_decl)
@@ -8093,6 +8097,7 @@ build_static_cast_1 (location_t loc, tree type, tree expr, bool c_cast_p,
 
       if (sanitize_flags_p (SANITIZE_VPTR))
 	{
+
 	  tree ubsan_check
 	    = cp_ubsan_maybe_instrument_downcast (loc, type,
 						  intype, expr);
@@ -8170,11 +8175,13 @@ build_static_cast_1 (location_t loc, tree type, tree expr, bool c_cast_p,
 
 tree
 build_static_cast (location_t loc, tree type, tree oexpr,
-		   tsubst_flags_t complain)
+		   tsubst_flags_t complain, bool in_ctor)
 {
   tree expr = oexpr;
   tree result;
   bool valid_p;
+
+  // zw: static_cast related logic lies somewhere here!!!
 
   if (type == error_mark_node || expr == error_mark_node)
     return error_mark_node;
@@ -8202,7 +8209,7 @@ build_static_cast (location_t loc, tree type, tree oexpr,
     expr = TREE_OPERAND (expr, 0);
 
   result = build_static_cast_1 (loc, type, expr, /*c_cast_p=*/false,
-				&valid_p, complain);
+				&valid_p, complain, in_ctor);
   if (valid_p)
     {
       if (result != error_mark_node)
@@ -8505,7 +8512,7 @@ build_reinterpret_cast_1 (location_t loc, tree type, tree expr,
 
 tree
 build_reinterpret_cast (location_t loc, tree type, tree expr,
-			tsubst_flags_t complain)
+			tsubst_flags_t complain, bool)
 {
   tree r;
 
@@ -8692,7 +8699,7 @@ build_const_cast_1 (location_t loc, tree dst_type, tree expr,
 
 tree
 build_const_cast (location_t loc, tree type, tree expr,
-		  tsubst_flags_t complain)
+		  tsubst_flags_t complain, bool)
 {
   tree r;
 
@@ -8747,7 +8754,7 @@ build_c_cast (location_t loc, tree type, cp_expr expr)
 
 tree
 cp_build_c_cast (location_t loc, tree type, tree expr,
-		 tsubst_flags_t complain)
+		 tsubst_flags_t complain, bool in_ctor)
 {
   tree value = expr;
   tree result;
@@ -8832,7 +8839,7 @@ cp_build_c_cast (location_t loc, tree type, tree expr,
 
   /* Or a static cast.  */
   result = build_static_cast_1 (loc, type, value, /*c_cast_p=*/true,
-				&valid_p, complain);
+				&valid_p, complain, in_ctor);
   /* Or a reinterpret_cast.  */
   if (!valid_p)
     result = build_reinterpret_cast_1 (loc, type, value, /*c_cast_p=*/true,

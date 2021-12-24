@@ -659,7 +659,7 @@ build_dynamic_cast_1 (location_t loc, tree type, tree expr,
     tree binfo = lookup_base (TREE_TYPE (exprtype), TREE_TYPE (type),
 			      ba_check, NULL, complain);
     if (binfo)
-      return build_static_cast (loc, type, expr, complain);
+      return build_static_cast (loc, type, expr, complain, /*in_ctor=*/false);
   }
 
   /* Apply trivial conversion T -> T& for dereferenced ptrs.  */
@@ -817,7 +817,7 @@ build_dynamic_cast_1 (location_t loc, tree type, tree expr,
 
 tree
 build_dynamic_cast (location_t loc, tree type, tree expr,
-		    tsubst_flags_t complain)
+		    tsubst_flags_t complain, bool)
 {
   tree r;
 

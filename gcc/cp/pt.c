@@ -20034,7 +20034,7 @@ tsubst_copy_and_build (tree t,
 	    r = build_dynamic_cast (input_location, type, op, complain);
 	    break;
 	  case STATIC_CAST_EXPR:
-	    r = build_static_cast (input_location, type, op, complain);
+	    r = build_static_cast (input_location, type, op, complain, /*in_ctor=*/false);
 	    if (IMPLICIT_RVALUE_P (t))
 	      set_implicit_rvalue_p (r);
 	    break;
