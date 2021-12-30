@@ -422,7 +422,24 @@ DEFINE_INT_AND_FLOAT_ROUND_FN (RINT)
    (div:C @0 (negate @0))
    (if ((INTEGRAL_TYPE_P (type) || VECTOR_INTEGER_TYPE_P (type))
 	&& TYPE_OVERFLOW_UNDEFINED (type))
-    { build_minus_one_cst (type); })))
+    { build_minus_one_cst (type); }))
+
+/* 1 / X -> X == 1 for unsigned integer X
+   1 / X -> X >= -1 && X <= 1 ? X : 0 for signed integer X
+   But not for 1 / 0 so that we can get proper warnings and errors. */
+(simplify
+  (div integer_onep@0 @1)
+  (switch
+    (if (!integer_zerop (@1)
+        && ANY_INTEGRAL_TYPE_P (TREE_TYPE (@1))
+        && TYPE_UNSIGNED (TREE_TYPE (@1)))
+      (eq @0 @1))
+    (if (!integer_zerop (@1)
+        && ANY_INTEGRAL_TYPE_P (TREE_TYPE (@1))
+        && !TYPE_UNSIGNED (TREE_TYPE (@1)))
+     (cond (bit_and (ge @1 { build_minus_one_cst (integer_type_node); })
+                    (le @1 { build_one_cst (integer_type_node); }))
+            @1 { build_zero_cst (type); })))))
 
 /* For unsigned integral types, FLOOR_DIV_EXPR is the same as
    TRUNC_DIV_EXPR.  Rewrite into the latter in this case.  */
