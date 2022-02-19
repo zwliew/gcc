@@ -60,7 +60,7 @@ int callee1 (struct A a)
   if ((a.f2 + 7) & 17)
     foo ();
 
-  if ((1300 / (short)a.f3) == 19)
+  if ((1300 / (a.f3 & 0xffff)) == 19)
     large_code;
 
   return 1;
@@ -115,6 +115,6 @@ int caller ()
 /* { dg-final { scan-ipa-dump-times "Creating a specialized node of callee1" 1 "cp" } } */
 /* { dg-final { scan-ipa-dump-times "Creating a specialized node of callee2" 1 "cp" } } */
 /* { dg-final { scan-ipa-dump-times "Creating a specialized node of callee3" 1 "cp" } } */
-/* { dg-final { scan-ipa-dump "op0\\\[offset: 32],\\(\\(short int\\) #\\),\\(\\(int\\) #\\),\\(1300 / #\\) == 19" "cp" } } */
+/* { dg-final { scan-ipa-dump "op0\\\[offset: 32],\\(# & 65535\\),\\(1300 / #\\) == 19" "cp" } } */
 /* { dg-final { scan-ipa-dump "op0\\\[ref offset: 0],\\(# \\^ 1\\) <" "cp" } } */
 /* { dg-final { scan-ipa-dump "op0,\\(# & 255\\),\\(1 - #\\),\\(# \\* 3\\),\\(27 % #\\) <" "cp" } } */
