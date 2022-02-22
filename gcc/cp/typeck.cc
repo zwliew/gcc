@@ -8080,6 +8080,14 @@ build_static_cast_1 (location_t loc, tree type, tree expr, bool c_cast_p,
     {
       tree base;
 
+      if ((DECL_CONSTRUCTOR_P (current_function_decl)
+            || DECL_DESTRUCTOR_P (current_function_decl))
+           && TREE_CODE (expr) == NOP_EXPR
+           && is_this_parameter (TREE_OPERAND (expr, 0)))
+        warning_at(loc, OPT_Wcast_qual,
+                   "invalid %<static_cast%> from type %qT to type %qT before the latter is constructed",
+                   intype, type);
+
       if (processing_template_decl)
 	return expr;
 
