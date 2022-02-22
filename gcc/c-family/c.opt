@@ -598,6 +598,10 @@ C++ ObjC++ Var(warn_deprecated_enum_float_conv) Warning
 Warn about deprecated arithmetic conversions on operands where one is of enumeration
 type and the other is of a floating-point type.
 
+Wderived-cast-undefined
+C++ Var(warn_derived_cast_undefined) Warning LangEnabledBy(C++, Wall)
+Warn about undefined casts from Base* to Derived* in the Base constructor or destructor.
+
 Wdesignated-init
 C ObjC Var(warn_designated_init) Init(1) Warning
 Warn about positional initialization of structs requiring designated initializers.

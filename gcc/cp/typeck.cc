@@ -7894,6 +7894,13 @@ build_static_cast_1 (location_t loc, tree type, tree expr, bool c_cast_p,
     {
       tree base;
 
+      if (TYPE_MAIN_VARIANT (intype) != TYPE_MAIN_VARIANT (TREE_TYPE (type))
+          && resolves_to_fixed_type_p (expr))
+        warning_at (loc, OPT_Wderived_cast_undefined,
+                   "invalid %<static_cast%> from type %qT to type %qT "
+                   "before the latter is constructed",
+                   intype, type);
+
       if (processing_template_decl)
 	return expr;
 
@@ -8078,6 +8085,12 @@ build_static_cast_1 (location_t loc, tree type, tree expr, bool c_cast_p,
 		      complain))
     {
       tree base;
+
+      if (resolves_to_fixed_type_p (expr))
+        warning_at (loc, OPT_Wderived_cast_undefined,
+                   "invalid %<static_cast%> from type %qT to type %qT "
+                   "before the latter is constructed",
+                   intype, type);
 
       if (processing_template_decl)
 	return expr;
